@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+    memo-app-mongo:
+        container_name: memo-app-mongo       
+        image: mongo
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root-pw
+            MONGO_INITDB_DATABASE: drama-memoapp-api
+        volumes:
+            - ./docker/mongo/:/docker-entrypoint-initdb.d/
+        ports:
+            - 27017:27017
+
+    memo-app-api:
+        container_name: memo-app-api
+        build: 
+            context: ./docker/api
+            dockerfile: memo-app-api.docker
+        image: memo-app-api
+        depends_on:
+            - memo-app-mongo
+        links:
+            - memo-app-mongo
+        ports:
+            - 8080:3000
+            

@@ -1,0 +1,12 @@
+FROM node:10.15.3-alpine
+
+WORKDIR /usr/src/app
+
+RUN apk add wget
+RUN wget -O memoapp-api-master.zip https://github.com/uxcode/memoapp-api/archive/master.zip 
+RUN unzip memoapp-api-master.zip -d .
+RUN mv memoapp-api-master/* ./ 
+RUN npm install
+
+EXPOSE 3000
+CMD ["npm", "start"]
