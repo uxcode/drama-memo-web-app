@@ -10,6 +10,7 @@ import LabelList from './label-list/LabelList';
 import MemoList from './memo-list/MemoList';
 import MemoDetail from './memo-detail/MemoDetail';
 import MemoPanel from './memo-list/MemoPanel';
+import { statement } from '@babel/template';
 
 interface State {
 	selectedLabel: LabelData;
@@ -17,12 +18,12 @@ interface State {
 	memoList: MemoData[];
 	isMemoEdit: boolean;
 	selectedMemoData: MemoData | null;
+	checkedMemoIds: string[];
 }
 
 export default class MemoApp extends React.Component<{}, State> {
 	private labelService = new LabelService();
 	private memoService = new MemoService();
-	private checkedMemoIds: string[] = [];
 	private allMemoList: MemoData[] = [];
 
 	constructor(props: any) {
@@ -31,7 +32,8 @@ export default class MemoApp extends React.Component<{}, State> {
 					  labelList:[DEFAULT_LABEL], 
 					  memoList:[],
 					  isMemoEdit: false,
-					  selectedMemoData: null
+					  selectedMemoData: null,
+					  checkedMemoIds: []
 					};
 	}
 
@@ -126,18 +128,22 @@ export default class MemoApp extends React.Component<{}, State> {
 	}
 
 	toggleCheckMemoHandler = (memoId: string, isCheck:boolean) => {
+		let checkedMemoIds = this.state.checkedMemoIds;
 		if (isCheck) {
-			this.checkedMemoIds.push(memoId);
+			checkedMemoIds.push(memoId);
 		} else {
-			let removingIndex = this.checkedMemoIds.indexOf(memoId);
-			this.checkedMemoIds.splice(removingIndex, 1);	
+			let removingIndex = checkedMemoIds.indexOf(memoId);
+			checkedMemoIds.splice(removingIndex, 1);	
 		}
+
+		this.setState({...this.state, checkedMemoIds});
 	}
 
 	tagLabelHandler = (labelId: string) => {
+		let checkedMemoIds = this.state.checkedMemoIds;
 		let memoIds: string[];
-		if (this.checkedMemoIds.length > 0) {
-			memoIds = this.checkedMemoIds;
+		if (checkedMemoIds.length > 0) {
+			memoIds = checkedMemoIds;
 		} else if (this.state.selectedMemoData) {
 			memoIds = [this.state.selectedMemoData.id];
 		} else {
@@ -159,14 +165,15 @@ export default class MemoApp extends React.Component<{}, State> {
 			} else {
 				memoList = [];
 			}
-			this.setState({...this.state, selectedLabel: labelData, labelList, memoList})
+			this.setState({...this.state, selectedLabel: labelData, labelList, memoList, checkedMemoIds:[]})
 		});
 	}
 
 	unTagLabelHandler = (labelId: String) => {
+		let checkedMemoIds = this.state.checkedMemoIds;
 		let memoIds: string[];
-		if (this.checkedMemoIds.length > 0) {
-			memoIds = this.checkedMemoIds;
+		if (checkedMemoIds.length > 0) {
+			memoIds = checkedMemoIds;
 		} else if (this.state.selectedMemoData) {
 			memoIds = [this.state.selectedMemoData.id];
 		} else {
@@ -188,7 +195,7 @@ export default class MemoApp extends React.Component<{}, State> {
 			} else {
 				memoList = [];
 			}
-			this.setState({...this.state, selectedLabel: labelData, labelList, memoList})
+			this.setState({...this.state, selectedLabel: labelData, labelList, memoList, checkedMemoIds:[]})
 		});
 	}
 
@@ -214,7 +221,8 @@ export default class MemoApp extends React.Component<{}, State> {
 						<br/>
 						<MemoList memoList={this.state.memoList}
 								  selectMemoHandler={this.selectMemoHandler}
-								  toggleCheckMemoHandler={this.toggleCheckMemoHandler}/> 
+								  toggleCheckMemoHandler={this.toggleCheckMemoHandler}
+								  checkedMemoIds={this.state.checkedMemoIds}/> 
 					</Col>
 					<Col md={6}> 
 						<MemoDetail selectedMemoData={this.state.selectedMemoData}

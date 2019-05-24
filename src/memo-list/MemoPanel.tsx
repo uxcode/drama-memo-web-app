@@ -119,7 +119,7 @@ export default class MemoPanel extends React.Component<Props, State> {
     renderTagLabelDropDown = () => {
         const labelList = this.props.labelList.map((label: LabelData) =>{
             return (
-                <DropdownItem value={label.id} onClick={this.tagLabel}>{label.title}</DropdownItem>
+                <DropdownItem key={label.id} value={label.id} onClick={this.tagLabel}>{label.title}</DropdownItem>
             );
         });
 

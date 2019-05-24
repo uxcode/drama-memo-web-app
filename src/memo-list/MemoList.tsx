@@ -8,6 +8,7 @@ import { MemoData } from '../share/Models';
 interface Props {
     memoList: Array<MemoData>;
     selectMemoHandler: Function;
+    checkedMemoIds: string[];
     toggleCheckMemoHandler: Function
 }
 
@@ -34,10 +35,13 @@ export default class MemoList extends React.Component<Props, State> {
     }
 
     check = (e: any) => {
-        e.stopPropagation();
         const memoId = e.currentTarget.name;
         const isCheck = e.currentTarget.checked;
         this.props.toggleCheckMemoHandler.call(null, memoId, isCheck);
+    }
+
+    clickCheckbox = (e: any) => {
+        e.stopPropagation();
     }
 
     render() {
@@ -58,7 +62,11 @@ export default class MemoList extends React.Component<Props, State> {
                             </Row>
                         </Col>
                         <Col md={1}>
-                        {' '}<Input name={memo.id} type="checkbox" onClick={this.check}/>
+                            {' '}
+                            <Input name={memo.id} type="checkbox"
+                                onChange={this.check}
+                                checked={this.props.checkedMemoIds.indexOf(memo.id) >= 0}
+                                onClick={this.clickCheckbox}/>
                         </Col>
                     </Row>
                 </ListGroupItem>
