@@ -81,12 +81,12 @@ export default class MemoPanel extends React.Component<Props, State> {
                         <Button color="secondary" disabled={this.isAllMemo()}>
                             <span className="fas fa-window-close"></span>
                         </Button>
-                        &nbsp;&nbsp;
+                    </Col>
+                    <Col md={4} className="text-right">
                         <Button color="danger" onClick={this.deleteLabel}>
                             <span className="fas fa-trash-alt"></span>
                         </Button>
-                    </Col>
-                    <Col md={{size: 2, offset:2}}>
+                        &nbsp;&nbsp;
                         <Button color="info" onClick={this.newMemo}>
                             <span className="fas fa-plus-square"></span>
                         </Button>

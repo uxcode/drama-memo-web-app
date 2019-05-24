@@ -41,7 +41,7 @@ export default class MemoDetailDisplay extends React.Component<Props, {}> {
                                 </dl>
                             </Row>
                         </Col>
-                        <Col md={{size: 3}} className="text-right">
+                        <Col md={3} className="text-right">
                             <Button onClick={this.editMemo} color="info"><span className="fas fa-edit"></span></Button>
                             {' '}
                             <Button onClick={this.deleteMemo} color="danger"><span className="fas fa-trash-alt"></span></Button>
