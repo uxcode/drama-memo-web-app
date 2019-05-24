@@ -11,10 +11,7 @@ interface Props {
 }
 
 export default class MemoDetailDisplay extends React.Component<Props, {}> {
-    constructor(props: Props) {
-        super(props);
-    }
-
+    
     parseDate = (date: Date) => {
         return moment(date).fromNow();
     }

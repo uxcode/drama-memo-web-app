@@ -2,8 +2,6 @@ import React from 'react';
 import { MemoData, MemoDataRequest } from '../share/Models';
 import { Button, Input, Form } from 'reactstrap';
 import MemoService from './MemoService';
-import { statement } from '@babel/template';
-
 
 interface Props {
     selectedMemoData: MemoData | null ;
