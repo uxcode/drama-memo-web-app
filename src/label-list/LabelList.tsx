@@ -1,18 +1,18 @@
 import React from 'react';
 import { Row, Col, Button, ListGroup, ListGroupItem, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import LableService from './LabelService';
-import {LabelData} from '../share/Models';
+import { LabelData, DEFAULT_LABEL } from '../share/Models';
 
 interface State {
     creatingLabel: string;
-    selectedLabel?: LabelData;
+    selectedLabel: LabelData;
 }
 
 interface Props {
     labelList: LabelData[];
+    initSelectedLable: LabelData;
     selectLabelHandler: Function;
     addLabelHandler: Function;
-    deleteLabelHandler: Function;
 }
 
 export default class LableList extends React.Component<Props, State> {
@@ -20,14 +20,14 @@ export default class LableList extends React.Component<Props, State> {
 
     constructor(props: any) {
         super(props)
-        this.state = {creatingLabel:''};
+        this.state = {creatingLabel:'', selectedLabel: this.props.initSelectedLable};
     }
 
     changeHandler = (e: any) => {
         this.setState({...this.state, creatingLabel: e.target.value})
     }
     createLabel = () => {
-        if ( !this.state.creatingLabel || this.state.creatingLabel == '') return;
+        if ( !this.state.creatingLabel || this.state.creatingLabel === '') return;
 
         this.service.createLable(this.state.creatingLabel)
         .then((label: LabelData) => {
@@ -39,34 +39,39 @@ export default class LableList extends React.Component<Props, State> {
     
     selectLabelHandler = (e: any) => {
         const labelId = e.target.id;
-        let selectedLabel = this.props.labelList.find(label => label.id == labelId);
+        let selectedLabel = this.props.labelList.find(label => label.id === labelId);
         if (!selectedLabel) {
-            selectedLabel = {id:'all-memos', title:'All Memos'}
+            selectedLabel = DEFAULT_LABEL;
         }
 
         this.setState({...this.state, selectedLabel});
         this.props.selectLabelHandler.call(null, selectedLabel);
     }
 
+    isActive = (label: LabelData) => {
+        return this.state.selectedLabel && label.id === this.state.selectedLabel.id;
+    }
+
     render() {
         const labelList = this.props.labelList.map((label: LabelData) =>{
             return (
-                <ListGroupItem id={label.id} tag="button"
+                <ListGroupItem id={label.id} key={label.id} tag="button"
                                value={label}
                                onClick={this.selectLabelHandler}
-                               active={this.state.selectedLabel && label.id === this.state.selectedLabel.id}>
+                               active={this.isActive(label)}>
 
                     {label.title}
                 </ListGroupItem>
             );
         });
+
         return (
             <div>
                 <Row><Col md={12}> 
                     <ListGroup>
-                        <ListGroupItem id="all-memos" tag="button"
+                        <ListGroupItem key={DEFAULT_LABEL.id} tag="button"
                                 onClick={this.selectLabelHandler}
-                                active={this.state.selectedLabel && "all-memos" === this.state.selectedLabel.id}>
+                                active={this.isActive(DEFAULT_LABEL)}>
                             All Memos
                         </ListGroupItem>
                         {labelList}

@@ -1,0 +1,69 @@
+import Configuration from '../share/Congifuration'
+import {MemoDataRequest, MemoData, Mapper} from '../share/Models'
+
+export default class MemoService {
+    private readonly url = Configuration.getApiHost() + '/memos';
+
+    async getMemos(): Promise<Array<MemoData>> {
+        return fetch(this.url)
+        .then(response => response.json())
+        .then(json => {
+            let memos = [];
+            for (let memo_json of json) {
+                memos.push(Mapper.mappingMemo(memo_json));
+            }
+            return memos;
+        })
+    }
+
+    async createMemo(request: MemoDataRequest): Promise<MemoData> {
+        return fetch(this.url, 
+            {
+                body: JSON.stringify(request), 
+                method:'POST', 
+                redirect: 'manual',
+                headers:{'Content-Type':'application/json',
+                         'Accept': 'application/json'}
+            })
+        .then(response => {
+            console.log(response);
+            response.json();
+        })
+        .then((json) => {
+            return Mapper.mappingMemo(json)
+        });
+    }
+
+    async updateMemo(id: string, request: MemoDataRequest): Promise<MemoData> {
+        let url: string = this.url + '/' + id;
+        return fetch(url, 
+            {
+                body: JSON.stringify(request), 
+                method:'PUT', 
+                redirect: 'manual',
+                headers:{'Content-Type':'application/json',
+                         'Accept': 'application/json'}
+            })
+        .then(response => {
+            console.log(response);
+            response.json();
+        })
+        .then((json) => {
+            return Mapper.mappingMemo(json)
+        });
+    }
+
+    async deleteMemo(memo: MemoData): Promise<MemoData> {
+        let url: string = this.url + '/' + memo.id;
+        return fetch(url, 
+            {
+                method:'DELETE', 
+                headers:{'Content-Type':'application/json',
+                         'Accept': 'application/json'}
+            })
+        .then(response => response.json())
+        .then(json => {
+            return Mapper.mappingMemo(json);
+        });
+    }
+}

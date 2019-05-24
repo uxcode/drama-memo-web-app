@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button, Row, Col, Input } from 'reactstrap';
+import { Button, Row, Col } from 'reactstrap';
 
-import {LabelData} from '../share/Models';
+import { LabelData, DEFAULT_LABEL } from '../share/Models';
 import LableService from '../label-list/LabelService';
 
 interface Props {
     selectedLabel: LabelData;
     updateLabelHandler: Function;
+    newMemoHandler: Function
 }
 
 interface State {
@@ -25,7 +26,7 @@ export default class MemoPanel extends React.Component<Props, State> {
     }
 
     isAllMemo = (): boolean => {
-        return this.props.selectedLabel.id == 'all-memos';
+        return this.props.selectedLabel.id === DEFAULT_LABEL.id;
     }
 
     toggleEditState = () => {
@@ -34,7 +35,7 @@ export default class MemoPanel extends React.Component<Props, State> {
     }
 
     componentDidUpdate = (prevProps: Props) => {
-        if (this.props != prevProps) {
+        if (this.props !== prevProps) {
             this.setState({...this.state, updatingLableTitle: this.props.selectedLabel.title});
         }
         if (this.state.isEditState && this.inputLable) {
@@ -55,13 +56,19 @@ export default class MemoPanel extends React.Component<Props, State> {
         });
     }
 
+    newMemo = () => {
+        console.log('clicked new btn', this.props.newMemoHandler);
+        this.props.newMemoHandler.call(null, this.props.selectedLabel);
+    }
+    
+
     render() {
         return (
             <div>
                 { this.renderLabel() }
                 <hr/>
                 <Row>
-                    <Col>
+                    <Col md={8}>
                         <Button color="success" disabled={this.isAllMemo()}>
                             <span className="fas fa-tag"></span>
                         </Button>
@@ -73,7 +80,12 @@ export default class MemoPanel extends React.Component<Props, State> {
                         <Button color="danger">
                             <span className="fas fa-trash-alt"></span>
                         </Button>
-                    </Col>    
+                    </Col>
+                    <Col md={{size: 2, offset:2}}>
+                        <Button color="info" onClick={this.newMemo}>
+                            <span className="fas fa-plus-square"></span>
+                        </Button>
+                    </Col>
                 </Row>
             </div>
         );

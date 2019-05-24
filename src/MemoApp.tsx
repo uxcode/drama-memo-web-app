@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col} from 'reactstrap';
 
-import {LabelData, MemoData} from './share/Models';
+import {LabelData, MemoData, DEFAULT_LABEL} from './share/Models';
 
 import LabelService from './label-list/LabelService';
 import MemoService from './memo-detail/MemoService';
@@ -16,6 +16,8 @@ interface State {
 	selectedLabel: LabelData;
 	labelList: LabelData[];
 	memoList: MemoData[];
+	isMemoEdit: boolean;
+	selectedMemoData: MemoData | null;
 }
 
 export default class MemoApp extends React.Component<{}, State> {
@@ -24,12 +26,12 @@ export default class MemoApp extends React.Component<{}, State> {
 
 	constructor(props: any) {
 		super(props)
-		let defaultLabel = {
-            id: 'all-memos'
-            , title: 'All Memos'
-        } as LabelData;
-
-		this.state = {selectedLabel:defaultLabel, labelList:[defaultLabel], memoList:[]};
+		this.state = {selectedLabel:DEFAULT_LABEL, 
+					  labelList:[DEFAULT_LABEL], 
+					  memoList:[],
+					  isMemoEdit: false,
+					  selectedMemoData: null 
+					};
 
 		this.labelService = new LabelService();
 		this.memoService = new MemoService();
@@ -39,6 +41,11 @@ export default class MemoApp extends React.Component<{}, State> {
 		this.labelService.getLables().then(
 			(labelList: LabelData[]) => {
 				this.setState({...this.state, labelList});
+			});
+
+		this.memoService.getMemos().then(
+			(memoList: MemoData[]) => {
+				this.setState({...this.state, memoList});
 			});
 	}
 	
@@ -66,8 +73,23 @@ export default class MemoApp extends React.Component<{}, State> {
 						selectedLabel: labelList[i]});
 	}
 
-	deleteLabelHandler = (labelId: string) => {
-		console.log('label ' + labelId + ' is deleted!');
+	newMemoHandler = (labelData: LabelData) => {
+		console.log('aadfa');
+		this.setState({...this.state, isMemoEdit:true})
+	}
+
+	selectMemoHandler = (selectedMemoId: String) => {
+		const memos: MemoData[] = this.state.memoList;
+		let selectedMemoData = memos.find(item => item.id === selectedMemoId );
+		if (selectedMemoData) this.setState({...this.state, selectedMemoData, isMemoEdit:false});
+	}
+
+	editMemoHandler = (memoData: MemoData) => {
+		this.setState({...this.setState, isMemoEdit:true});
+	}
+
+	deleteMemoHandler = (memoData: MemoData) => {
+		this.memoService.deleteMemo(memoData);
 	}
 
 	render() {
@@ -75,17 +97,25 @@ export default class MemoApp extends React.Component<{}, State> {
 			<Container fluid={true}>
 				<Row>
 					<Col md={2}> 
-						<LabelList labelList={this.state.labelList}
+						<LabelList initSelectedLable={this.state.selectedLabel}
+								   labelList={this.state.labelList}
 								   selectLabelHandler={this.selectLabelHandler}
-								   addLabelHandler={this.addLabelHandler}
-								   deleteLabelHandler={this.deleteLabelHandler}/> 
+								   addLabelHandler={this.addLabelHandler}/> 
 					</Col>
 					<Col md={4}> 
 						<MemoPanel selectedLabel={this.state.selectedLabel}
-								   updateLabelHandler={this.updateLabelHandler}/>
-						<MemoList memoList={[]}/> 
+								   updateLabelHandler={this.updateLabelHandler}
+								   newMemoHandler={this.newMemoHandler}/>
+						<br/>
+						<MemoList memoList={this.state.memoList}
+								  selectMemoHandler={this.selectMemoHandler}/> 
 					</Col>
-					<Col md={5}> <MemoDetail/> </Col>
+					<Col md={6}> 
+						<MemoDetail selectedMemoData={this.state.selectedMemoData}
+									editMemoHandler={this.editMemoHandler}
+									deleteMemoHandler={this.deleteMemoHandler}
+									isEdit={this.state.isMemoEdit}/> 
+					</Col>
 				</Row>
 			</Container>  
 		);

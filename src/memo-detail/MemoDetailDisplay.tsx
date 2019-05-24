@@ -1,17 +1,63 @@
+import moment from 'moment';
 import React from 'react';
-import { Container, Row, Col, Button, ListGroup, ListGroupItem, Input, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import { Button, Row, Col } from 'reactstrap';
 
-export default class MemoDetailDisplay extends React.Component {
-    render() {
-        return (
-            <div>
-                <p><h1>Display</h1></p>
-                <dl className="row">
-                    <dt className="col-sm-3">Last modified</dt>
-                    <dd className="col-sm-9">A description list is perfect for defining terms.</dd>
-                </dl>
-                <p>memo body asdfasd  adf a asd asdfsadf sd s    asdfas asdfsadf</p>
-            </div>
-        );
+import { MemoData } from '../share/Models';
+
+interface Props {
+    selectedMemoData: MemoData | null;
+    editMemoHandler: Function;
+    deleteMemoHandler: Function;
+}
+
+export default class MemoDetailDisplay extends React.Component<Props, {}> {
+    constructor(props: Props) {
+        super(props);
+    }
+
+    parseDate = (date: Date) => {
+        return moment(date).fromNow();
+    }
+
+    editMemo = () => {
+        this.props.editMemoHandler.call(null, this.props.selectedMemoData)
+    }
+
+    deleteMemo = () => {
+        this.props.deleteMemoHandler.call(null, this.props.selectedMemoData)
+    }
+
+    render () {
+        if ( this.props.selectedMemoData) {
+            let memoData = this.props.selectedMemoData as MemoData;
+            return (
+                <div className="container-fluid">
+                    <Row className="align-items-center">
+                        <Col md={9}>
+                            <Row>
+                                <h1>{memoData.title}</h1>
+                            </Row>
+                            <Row>
+                                <dl className="row">
+                                    <dt className="col-sm-4">Last modified</dt>
+                                    <dd className="col-sm-8">{this.parseDate(memoData.updatedAt)}</dd>
+                                </dl>
+                            </Row>
+                        </Col>
+                        <Col md={{size: 3}} className="text-right">
+                            <Button onClick={this.editMemo} color="info"><span className="fas fa-edit"></span></Button>
+                            {' '}
+                            <Button onClick={this.deleteMemo} color="danger"><span className="fas fa-trash-alt"></span></Button>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <p>{memoData.content}</p>
+                    </Row>
+                </div>
+            );
+        } else {
+            return <h3>No memo selected</h3>
+        }
     }
 }
