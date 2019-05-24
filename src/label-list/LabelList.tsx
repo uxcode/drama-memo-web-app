@@ -5,11 +5,11 @@ import { LabelData, DEFAULT_LABEL } from '../share/Models';
 
 interface State {
     creatingLabel: string;
-    selectedLabel: LabelData;
 }
 
 interface Props {
     labelList: LabelData[];
+    selectedLabel: LabelData;
     initSelectedLable: LabelData;
     selectLabelHandler: Function;
     addLabelHandler: Function;
@@ -20,7 +20,7 @@ export default class LableList extends React.Component<Props, State> {
 
     constructor(props: any) {
         super(props)
-        this.state = {creatingLabel:'', selectedLabel: this.props.initSelectedLable};
+        this.state = {creatingLabel:''};
     }
 
     changeHandler = (e: any) => {
@@ -43,13 +43,11 @@ export default class LableList extends React.Component<Props, State> {
         if (!selectedLabel) {
             selectedLabel = DEFAULT_LABEL;
         }
-
-        this.setState({...this.state, selectedLabel});
         this.props.selectLabelHandler.call(null, selectedLabel);
     }
 
     isActive = (label: LabelData) => {
-        return this.state.selectedLabel && label.id === this.state.selectedLabel.id;
+        return this.props.selectedLabel && label.id === this.props.selectedLabel.id;
     }
 
     render() {

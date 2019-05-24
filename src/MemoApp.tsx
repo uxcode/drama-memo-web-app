@@ -21,8 +21,9 @@ interface State {
 }
 
 export default class MemoApp extends React.Component<{}, State> {
-	private labelService: LabelService;
-	private memoService: MemoService;
+	private labelService = new LabelService();
+	private memoService = new MemoService();
+	private checkedMemoIds: string[] = [];
 
 	constructor(props: any) {
 		super(props)
@@ -30,11 +31,8 @@ export default class MemoApp extends React.Component<{}, State> {
 					  labelList:[DEFAULT_LABEL], 
 					  memoList:[],
 					  isMemoEdit: false,
-					  selectedMemoData: null 
+					  selectedMemoData: null
 					};
-
-		this.labelService = new LabelService();
-		this.memoService = new MemoService();
 	}
 
 	componentDidMount() {
@@ -73,8 +71,21 @@ export default class MemoApp extends React.Component<{}, State> {
 						selectedLabel: labelList[i]});
 	}
 
+	deleteLabelHandler = (label: LabelData) => {
+		this.labelService.deleteLabel(label.id)
+		.then( (deletedLabel: LabelData) => {
+			let labelList = this.state.labelList;
+			for (let i=0; i < labelList.length; i++) {
+				if (labelList[i].id === deletedLabel.id){
+					labelList.splice(i, 1);
+					break;
+				}
+			}
+			this.setState({...this.state, labelList, selectedLabel: DEFAULT_LABEL});
+		});
+	}
+
 	newMemoHandler = (labelData: LabelData) => {
-		console.log('aadfa');
 		this.setState({...this.state, isMemoEdit:true})
 	}
 
@@ -89,7 +100,37 @@ export default class MemoApp extends React.Component<{}, State> {
 	}
 
 	deleteMemoHandler = (memoData: MemoData) => {
-		this.memoService.deleteMemo(memoData);
+		this.memoService.deleteMemo(memoData)
+		.then((deletedMemo:MemoData)=>{
+			let memoList = this.state.memoList;
+			for (let i=0; i < memoList.length; i++) {
+				let existMemo = memoList[i];
+				if (existMemo.id === deletedMemo.id) {
+					memoList.splice(i, 1);
+					break;
+				}
+			}
+
+			this.setState({...this.state, memoList, selectedMemoData:null});
+		});
+	}
+
+	toggleCheckMemoHandler = (memoId: string, isCheck:boolean) => {
+		if (isCheck) {
+			this.checkedMemoIds.push(memoId);
+		} else {
+			let removingIndex = this.checkedMemoIds.indexOf(memoId);
+			this.checkedMemoIds.splice(removingIndex, 1);	
+		}
+	}
+
+	addMemoOnTheLabel() {
+		this.labelService.addMemosOnTheLabel(this.state.selectedLabel.id, this.checkedMemoIds)
+		.then();
+	}
+
+	removeMemosFromTheLabel() {
+
 	}
 
 	render() {
@@ -99,16 +140,19 @@ export default class MemoApp extends React.Component<{}, State> {
 					<Col md={2}> 
 						<LabelList initSelectedLable={this.state.selectedLabel}
 								   labelList={this.state.labelList}
+								   selectedLabel={this.state.selectedLabel}
 								   selectLabelHandler={this.selectLabelHandler}
 								   addLabelHandler={this.addLabelHandler}/> 
 					</Col>
 					<Col md={4}> 
 						<MemoPanel selectedLabel={this.state.selectedLabel}
 								   updateLabelHandler={this.updateLabelHandler}
-								   newMemoHandler={this.newMemoHandler}/>
+								   newMemoHandler={this.newMemoHandler}
+								   deleteLabelHandler={this.deleteLabelHandler}/>
 						<br/>
 						<MemoList memoList={this.state.memoList}
-								  selectMemoHandler={this.selectMemoHandler}/> 
+								  selectMemoHandler={this.selectMemoHandler}
+								  toggleCheckMemoHandler={this.toggleCheckMemoHandler}/> 
 					</Col>
 					<Col md={6}> 
 						<MemoDetail selectedMemoData={this.state.selectedMemoData}

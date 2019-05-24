@@ -44,4 +44,48 @@ export default class LableService {
             return Mapper.mappingLabel(json)
         });
     }
+
+    async deleteLabel(id: string): Promise<LabelData> {
+        const url = this.url + '/' + id;
+        return fetch(url, 
+            {
+                method:'DELETE', 
+                headers:{'Content-Type':'application/json',
+                         'Accept': 'application/json'}
+            })
+        .then(response => response.json())
+        .then((json) => {
+            return Mapper.mappingLabel(json)
+        });
+    }
+
+    async addMemosOnTheLabel(labelId:String, memoIds:String[]) {
+        const url = this.url + '/' + labelId + '/memos';
+        fetch(url, 
+            {
+                body: JSON.stringify({'memoIds':memoIds}), 
+                method:'POST', 
+                headers:{'Content-Type':'application/json',
+                         'Accept': 'application/json'}
+            })
+        .then(response => response.json())
+        .then((json) => {
+            return Mapper.mappingLabel(json)
+        });
+    }
+
+    async removeMemosFromTheLabel(labelId:String, memoIds:String[]) {
+        const url = this.url + '/' + labelId + '/memos';
+        fetch(url, 
+            {
+                body: JSON.stringify({'memoIds':memoIds}), 
+                method:'DELETE', 
+                headers:{'Content-Type':'application/json',
+                         'Accept': 'application/json'}
+            })
+        .then(response => response.json())
+        .then((json) => {
+            return Mapper.mappingLabel(json)
+        });
+    }
 }

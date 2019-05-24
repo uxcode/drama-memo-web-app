@@ -7,7 +7,8 @@ import LableService from '../label-list/LabelService';
 interface Props {
     selectedLabel: LabelData;
     updateLabelHandler: Function;
-    newMemoHandler: Function
+    newMemoHandler: Function;
+    deleteLabelHandler: Function;
 }
 
 interface State {
@@ -60,6 +61,10 @@ export default class MemoPanel extends React.Component<Props, State> {
         console.log('clicked new btn', this.props.newMemoHandler);
         this.props.newMemoHandler.call(null, this.props.selectedLabel);
     }
+
+    deleteLabel = () => {
+        this.props.deleteLabelHandler.call(null, this.props.selectedLabel);
+    }
     
 
     render() {
@@ -77,7 +82,7 @@ export default class MemoPanel extends React.Component<Props, State> {
                             <span className="fas fa-window-close"></span>
                         </Button>
                         &nbsp;&nbsp;
-                        <Button color="danger">
+                        <Button color="danger" onClick={this.deleteLabel}>
                             <span className="fas fa-trash-alt"></span>
                         </Button>
                     </Col>
