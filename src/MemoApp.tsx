@@ -60,7 +60,16 @@ export default class MemoApp extends React.Component<{}, State> {
 		} else {
 			memoList = [];
 		}
-		this.setState({...this.state, selectedLabel, memoList});
+		
+		let selectedMemoData = this.state.selectedMemoData;
+		const memoData = this.state.selectedMemoData;
+		if (memoData !== null) {
+			if ( memoList.find(memoData => memoData.id === memoData.id) == undefined) {
+				selectedMemoData = null;
+			}
+		}
+
+		this.setState({...this.state, selectedLabel, memoList, selectedMemoData});
 	}
 
 	addLabelHandler = (label: LabelData) => {
@@ -220,6 +229,7 @@ export default class MemoApp extends React.Component<{}, State> {
 								   unTagLabelHandler={this.unTagLabelHandler}/>
 						<br/>
 						<MemoList memoList={this.state.memoList}
+								  selectedMemoData={this.state.selectedMemoData}
 								  selectMemoHandler={this.selectMemoHandler}
 								  toggleCheckMemoHandler={this.toggleCheckMemoHandler}
 								  checkedMemoIds={this.state.checkedMemoIds}/> 

@@ -7,22 +7,13 @@ import { MemoData } from '../share/Models';
 
 interface Props {
     memoList: Array<MemoData>;
-    selectMemoHandler: Function;
     checkedMemoIds: string[];
+    selectedMemoData: MemoData | null;
+    selectMemoHandler: Function;
     toggleCheckMemoHandler: Function
 }
 
-interface State {
-    selectedMemoId: string;
-}
-
-export default class MemoList extends React.Component<Props, State> {
-
-    constructor(props: Props) {
-        super(props);
-
-        this.state = {selectedMemoId:''}
-    }
+export default class MemoList extends React.Component<Props, {}> {
 
     parseDate = (date: Date) => {
         return moment(date).fromNow();
@@ -44,33 +35,42 @@ export default class MemoList extends React.Component<Props, State> {
         e.stopPropagation();
     }
 
+    couldActive = (memoId: string): boolean => {
+        return this.props.selectedMemoData !== null && memoId === this.props.selectedMemoData.id
+    }
+
     render() {
-        const memoList = this.props.memoList.map((memo: MemoData) => {
-            return (
-                <ListGroupItem id={memo.id} key={memo.id} name={memo.id} 
-                tag="button" onClick={this.selectMemo}
-                active={memo.id === this.state.selectedMemoId}>
-                    <Row>
-                        <Col>
-                            <Row>
-                                <ListGroupItemHeading>{memo.title}</ListGroupItemHeading>
-                                <span>&nbsp;&nbsp;&#124;&nbsp;</span>
-                                <ListGroupItemText>{this.parseDate(memo.updatedAt)}</ListGroupItemText>
-                            </Row>
-                            <Row>
-                                <ListGroupItemText>{memo.content}</ListGroupItemText>
-                            </Row>
-                        </Col>
-                        <Col md={1}>
-                            {' '}
-                            <Input name={memo.id} type="checkbox"
-                                onChange={this.check}
-                                checked={this.props.checkedMemoIds.indexOf(memo.id) >= 0}
-                                onClick={this.clickCheckbox}/>
-                        </Col>
-                    </Row>
-                </ListGroupItem>
-            )});
+        let memoList: any;
+        if (this.props.memoList.length) {
+            memoList = this.props.memoList.map((memo: MemoData) => {
+                return (
+                    <ListGroupItem id={memo.id} key={memo.id} name={memo.id} 
+                        tag="button" onClick={this.selectMemo}
+                        active={this.couldActive(memo.id)}>
+                        <Row>
+                            <Col>
+                                <Row>
+                                    <ListGroupItemHeading>{memo.title}</ListGroupItemHeading>
+                                    <span>&nbsp;&nbsp;&#124;&nbsp;</span>
+                                    <ListGroupItemText>{this.parseDate(memo.updatedAt)}</ListGroupItemText>
+                                </Row>
+                                <Row>
+                                    <ListGroupItemText>{memo.content}</ListGroupItemText>
+                                </Row>
+                            </Col>
+                            <Col md={1}>
+                                {' '}
+                                <Input name={memo.id} type="checkbox"
+                                    onChange={this.check}
+                                    checked={this.props.checkedMemoIds.indexOf(memo.id) >= 0}
+                                    onClick={this.clickCheckbox}/>
+                            </Col>
+                        </Row>
+                    </ListGroupItem>
+                )});
+        } else {
+            return <div>No memos with this label</div>
+        }
     
         return (
             <ListGroup>{memoList}</ListGroup>
