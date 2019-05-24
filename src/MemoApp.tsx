@@ -107,7 +107,7 @@ export default class MemoApp extends React.Component<{}, State> {
 	}
 
 	newMemoHandler = (labelData: LabelData) => {
-		this.setState({...this.state, isMemoEdit:true})
+		this.setState({...this.state, selectedMemoData:null, isMemoEdit:true})
 	}
 
 	selectMemoHandler = (selectedMemoId: String) => {
@@ -208,6 +208,39 @@ export default class MemoApp extends React.Component<{}, State> {
 		});
 	}
 
+	createMemoHandler = (memoData: MemoData) => {
+		this.allMemoList.push(memoData);
+
+		let memoList;
+		if (this.state.selectedLabel.id === DEFAULT_LABEL.id) {
+			memoList = this.allMemoList;
+		} else {
+			memoList = this.state.memoList;
+		}
+
+		this.setState({...this.state, memoList, selectedMemoData: memoData, isMemoEdit: false});
+	}
+
+	updateMemoHandler = (memoData: MemoData) => {
+		this.updateMemoDataInList(memoData, this.allMemoList);
+		
+		let labelList = this.state.labelList;
+		for (let labelData of labelList) {
+			if (labelData.memos)
+				this.updateMemoDataInList(memoData, labelData.memos)
+		}
+
+		this.setState({...this.state, labelList, isMemoEdit: false});
+	}
+
+	updateMemoDataInList(memoData: MemoData, memoList: MemoData[]) {
+		for (let i=0; i < memoList.length; i++) {
+			if (memoData.id === memoList[i].id) {
+				memoList[i] = memoData;
+			}
+		}
+	}
+
 	render() {
 		return (
 			<Container fluid={true}>
@@ -238,7 +271,9 @@ export default class MemoApp extends React.Component<{}, State> {
 						<MemoDetail selectedMemoData={this.state.selectedMemoData}
 									editMemoHandler={this.editMemoHandler}
 									deleteMemoHandler={this.deleteMemoHandler}
-									isEdit={this.state.isMemoEdit}/> 
+									isEdit={this.state.isMemoEdit}
+									createMemoHandler={this.createMemoHandler}
+									updateMemoHandler={this.updateMemoHandler}/> 
 					</Col>
 				</Row>
 			</Container>  

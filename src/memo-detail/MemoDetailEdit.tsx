@@ -5,6 +5,8 @@ import MemoService from './MemoService';
 
 interface Props {
     selectedMemoData: MemoData | null ;
+    createMemoHandler: Function;
+    updateMemoHandler: Function;
 }
 
 interface State {
@@ -28,15 +30,15 @@ export default class MemoDetailEdit extends React.Component <Props, State> {
         this.state = {form};
     }
 
-    summit = () => {
+    summit = (e: any) => {
         if (this.props.selectedMemoData) {
             this.service.updateMemo(this.props.selectedMemoData.id, this.state.form)
             .then( (memo: MemoData) => {
-                console.log('ok create!');
+                this.props.updateMemoHandler(memo);
             });
         } else {
             this.service.createMemo(this.state.form).then( (memo: MemoData) => {
-                console.log('ok update!');
+                this.props.createMemoHandler(memo);
             });
         }
     }
@@ -62,7 +64,7 @@ export default class MemoDetailEdit extends React.Component <Props, State> {
                        onChange={this.inputChangeHandler}
                        placeholder="Type memo here."></Input>
                 <br/>
-                <Button color="success" type="submit" onClick={this.summit}>Summit</Button>
+                <Button color="success" onClick={this.summit}>Summit</Button>
             </Form>
         );
     }

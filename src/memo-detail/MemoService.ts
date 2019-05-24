@@ -21,16 +21,11 @@ export default class MemoService {
             {
                 body: JSON.stringify(request), 
                 method:'POST', 
-                redirect: 'manual',
-                headers:{'Content-Type':'application/json',
-                         'Accept': 'application/json'}
+                headers:{'Content-Type':'application/json'}
             })
-        .then(response => {
-            console.log(response);
-            response.json();
-        })
-        .then((json) => {
-            return Mapper.mappingMemo(json)
+        .then(response => response.json())
+        .then((memo_json) => {
+            return Mapper.mappingMemo(memo_json)
         });
     }
 
@@ -40,16 +35,11 @@ export default class MemoService {
             {
                 body: JSON.stringify(request), 
                 method:'PUT', 
-                redirect: 'manual',
-                headers:{'Content-Type':'application/json',
-                         'Accept': 'application/json'}
+                headers:{'Content-Type':'application/json','Accept': 'application/json'}
             })
-        .then(response => {
-            console.log(response);
-            response.json();
-        })
-        .then((json) => {
-            return Mapper.mappingMemo(json)
+        .then(response => response.json())
+        .then((memo_json) => {
+            return Mapper.mappingMemo(memo_json)
         });
     }
 
@@ -62,7 +52,7 @@ export default class MemoService {
                          'Accept': 'application/json'}
             })
         .then(response => response.json())
-        .then(json => {
+        .then((json) => {
             return Mapper.mappingMemo(json);
         });
     }
