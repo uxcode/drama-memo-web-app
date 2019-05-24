@@ -163,8 +163,33 @@ export default class MemoApp extends React.Component<{}, State> {
 		});
 	}
 
-	unTagLabelHandler() {
+	unTagLabelHandler = (labelId: String) => {
+		let memoIds: string[];
+		if (this.checkedMemoIds.length > 0) {
+			memoIds = this.checkedMemoIds;
+		} else if (this.state.selectedMemoData) {
+			memoIds = [this.state.selectedMemoData.id];
+		} else {
+			console.warn('There is not selected Memos');
+			return;
+		}
 
+		this.labelService.removeMemosFromTheLabel(labelId, memoIds)
+		.then((labelData: LabelData) => {
+			let labelList = this.state.labelList;
+			for (let i=0; i < labelList.length; i++) {
+				if (labelList[i].id === labelData.id) {
+					labelList[i] = labelData;
+				}
+			}
+			let memoList: MemoData[];
+			if (labelData.memos) {
+				memoList = labelData.memos;
+			} else {
+				memoList = [];
+			}
+			this.setState({...this.state, selectedLabel: labelData, labelList, memoList})
+		});
 	}
 
 	render() {

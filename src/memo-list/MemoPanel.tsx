@@ -78,8 +78,7 @@ export default class MemoPanel extends React.Component<Props, State> {
     }
 
     unTagLabel = (e: any) => {
-        const labelId = e.currentTarget.value;
-        this.props.unTagLabelHandler.call(null, labelId);
+        this.props.unTagLabelHandler.call(null, this.props.selectedLabel.id);
     }
     
     toggle = () => {
@@ -99,7 +98,7 @@ export default class MemoPanel extends React.Component<Props, State> {
                         {this.renderTagLabelDropDown()}
                     </Col>
                     <Col md={2}>
-                        <Button color="info" hidden={this.isAllMemo()}>
+                        <Button color="danger" onClick={this.unTagLabel} hidden={this.isAllMemo()}>
                             <span className="fas fa-window-close"></span>
                         </Button>
                     </Col>
