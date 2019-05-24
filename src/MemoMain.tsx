@@ -10,7 +10,6 @@ import LabelList from './label-list/LabelList';
 import MemoList from './memo-list/MemoList';
 import MemoDetail from './memo-detail/MemoDetail';
 import MemoPanel from './memo-list/MemoPanel';
-import { statement } from '@babel/template';
 
 interface State {
 	selectedLabel: LabelData;
@@ -21,12 +20,16 @@ interface State {
 	checkedMemoIds: string[];
 }
 
-export default class MemoApp extends React.Component<{}, State> {
+interface Props {
+	match?:any
+}
+
+export default class MemoApp extends React.Component<Props, State> {
 	private labelService = new LabelService();
 	private memoService = new MemoService();
 	private allMemoList: MemoData[] = [];
 
-	constructor(props: any) {
+	constructor(props: Props) {
 		super(props)
 		this.state = {selectedLabel:DEFAULT_LABEL, 
 					  labelList:[DEFAULT_LABEL], 
@@ -40,7 +43,8 @@ export default class MemoApp extends React.Component<{}, State> {
 	componentDidMount() {
 		this.labelService.getLables().then(
 			(labelList: LabelData[]) => {
-				this.setState({...this.state, labelList});
+				let selectedLabel = this.getSelectLabelFromRoute(labelList);
+				this.setState({...this.state, labelList, selectedLabel});
 			});
 
 		this.memoService.getMemos().then(
@@ -48,8 +52,28 @@ export default class MemoApp extends React.Component<{}, State> {
 				this.allMemoList = memoList
 				this.setState({...this.state, memoList});
 			});
+		
+	}
+
+	componentDidUpdate(prevProp: Props) {
+		if (prevProp.match !== this.props.match) {
+			this.selectLabelHandler(this.getSelectLabelFromRoute(this.state.labelList));
+		}
 	}
 	
+	getSelectLabelFromRoute = (labelList: LabelData[]) => {
+		if (this.props.match) {
+			if ('labelId' in this.props.match.params) {
+				const labelId = this.props.match.params.labelId;
+				const labelData = labelList.find(label => label.id === labelId);
+				if (labelData) {
+					return labelData;
+				}
+			}
+		}
+		return DEFAULT_LABEL;
+	}
+
 	selectLabelHandler = (selectedLabel: LabelData) => {
 		let memoList: MemoData[];
 		if (selectedLabel.id === DEFAULT_LABEL.id) {
@@ -64,7 +88,7 @@ export default class MemoApp extends React.Component<{}, State> {
 		let selectedMemoData = this.state.selectedMemoData;
 		const memoData = this.state.selectedMemoData;
 		if (memoData !== null) {
-			if ( memoList.find(memoData => memoData.id === memoData.id) == undefined) {
+			if ( memoList.find(memoData => memoData.id === memoData.id) === undefined) {
 				selectedMemoData = null;
 			}
 		}

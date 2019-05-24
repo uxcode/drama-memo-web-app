@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col, Button, ListGroup, ListGroupItem, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import LableService from './LabelService';
 import { LabelData, DEFAULT_LABEL } from '../share/Models';
 
@@ -53,13 +54,13 @@ export default class LableList extends React.Component<Props, State> {
     render() {
         const labelList = this.props.labelList.map((label: LabelData) =>{
             return (
-                <ListGroupItem id={label.id} key={label.id} tag="button"
-                               value={label}
-                               onClick={this.selectLabelHandler}
-                               active={this.isActive(label)}>
-
-                    {label.title}
-                </ListGroupItem>
+                <Link to={"/label/"+label.id} key={label.id}>
+                    <ListGroupItem id={label.id} tag="button" className="container-fluid"
+                                value={label}
+                                active={this.isActive(label)}>
+                        {label.title}
+                    </ListGroupItem>
+                </Link>
             );
         });
 
@@ -67,11 +68,11 @@ export default class LableList extends React.Component<Props, State> {
             <div>
                 <Row><Col md={12}> 
                     <ListGroup>
-                        <ListGroupItem key={DEFAULT_LABEL.id} tag="button"
-                                onClick={this.selectLabelHandler}
-                                active={this.isActive(DEFAULT_LABEL)}>
-                            All Memos
-                        </ListGroupItem>
+                        <Link to={"/label/"+DEFAULT_LABEL.id} key={DEFAULT_LABEL.id}>
+                            <ListGroupItem tag="button" active={this.isActive(DEFAULT_LABEL)} className="container-fluid">
+                                All Memos
+                            </ListGroupItem>
+                        </Link>
                         {labelList}
                     </ListGroup>    
                 </Col></Row>
@@ -79,7 +80,9 @@ export default class LableList extends React.Component<Props, State> {
                 <InputGroup>
                     <Input id="creatingLabel" type="text" name="lable" placeholder="Add Label" 
                         value={this.state.creatingLabel} onChange={this.changeHandler} ></Input>
-                    <InputGroupAddon addonType="append"><Button color="info" onClick={this.createLabel}>{"+"}</Button></InputGroupAddon>
+                    <InputGroupAddon addonType="append">
+                        <Button color="info" onClick={this.createLabel}>{"+"}</Button>
+                    </InputGroupAddon>
                 </InputGroup>
             </div>
         );
