@@ -1,19 +1,23 @@
 import React from 'react';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col, DropdownItem, Dropdown, DropdownMenu, DropdownToggle} from 'reactstrap';
 
 import { LabelData, DEFAULT_LABEL } from '../share/Models';
 import LableService from '../label-list/LabelService';
 
 interface Props {
     selectedLabel: LabelData;
+    labelList: LabelData[];
     updateLabelHandler: Function;
     newMemoHandler: Function;
     deleteLabelHandler: Function;
+    tagLabelHandler: Function;
+    unTagLabelHandler: Function;
 }
 
 interface State {
     isEditState: boolean;
     updatingLableTitle: string;
+    dropdownOpen: boolean;
 }
 
 export default class MemoPanel extends React.Component<Props, State> {
@@ -23,7 +27,9 @@ export default class MemoPanel extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = {isEditState: false, updatingLableTitle: props.selectedLabel.title};
+        this.state = { isEditState: false, 
+                       updatingLableTitle: props.selectedLabel.title,
+                       dropdownOpen: false };
     }
 
     isAllMemo = (): boolean => {
@@ -65,29 +71,44 @@ export default class MemoPanel extends React.Component<Props, State> {
     deleteLabel = () => {
         this.props.deleteLabelHandler.call(null, this.props.selectedLabel);
     }
+
+    tagLabel = (e: any) => {
+        const labelId = e.currentTarget.value;
+        this.props.tagLabelHandler.call(null, labelId);
+    }
+
+    unTagLabel = (e: any) => {
+        const labelId = e.currentTarget.value;
+        this.props.unTagLabelHandler.call(null, labelId);
+    }
     
+    toggle = () => {
+        this.setState(prevState => ({
+            ...this.state,
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+      }
 
     render() {
         return (
             <div>
-                { this.renderLabel() }
+                { this.renderHeaderWithLabel() }
                 <hr/>
                 <Row>
-                    <Col md={8}>
-                        <Button color="success" disabled={this.isAllMemo()}>
-                            <span className="fas fa-tag"></span>
-                        </Button>
-                        &nbsp;&nbsp;
-                        <Button color="secondary" disabled={this.isAllMemo()}>
+                    <Col md={2}>
+                        {this.renderTagLabelDropDown()}
+                    </Col>
+                    <Col md={2}>
+                        <Button color="info" hidden={this.isAllMemo()}>
                             <span className="fas fa-window-close"></span>
                         </Button>
                     </Col>
-                    <Col md={4} className="text-right">
+                    <Col md={{size:4, offset:4}} className="text-right">
                         <Button color="danger" onClick={this.deleteLabel}>
                             <span className="fas fa-trash-alt"></span>
                         </Button>
                         &nbsp;&nbsp;
-                        <Button color="info" onClick={this.newMemo}>
+                        <Button color="primary" onClick={this.newMemo}>
                             <span className="fas fa-plus-square"></span>
                         </Button>
                     </Col>
@@ -96,7 +117,26 @@ export default class MemoPanel extends React.Component<Props, State> {
         );
     }
 
-    renderLabel() {
+    renderTagLabelDropDown = () => {
+        const labelList = this.props.labelList.map((label: LabelData) =>{
+            return (
+                <DropdownItem value={label.id} onClick={this.tagLabel}>{label.title}</DropdownItem>
+            );
+        });
+
+        return (
+            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                <DropdownToggle caret color='success'>
+                    <span className="fas fa-tags"></span>
+                </DropdownToggle>
+                <DropdownMenu>
+                    {labelList}
+                </DropdownMenu>
+            </Dropdown>
+        );
+    }
+
+    renderHeaderWithLabel() {
         if (this.state.isEditState) {
             return (
                 <Row>

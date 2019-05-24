@@ -15,7 +15,7 @@ export interface LabelData {
     title: string;
     updatedAt?: Date;
     createdAt?: Date;
-    memoIds?: Array<string>;
+    memos?: MemoData[];
 }
 
 export const DEFAULT_LABEL: LabelData = {
@@ -35,10 +35,15 @@ export class Mapper {
     }
 
     static mappingLabel(obj:any): LabelData {
+        let memos: MemoData[] = [];
+        for (let memo_json of obj['memos']) {
+            memos.push(this.mappingMemo(memo_json));
+        }
+
         return {
             id: obj['_id']
             , title: obj['title']
-            , memoIds: obj['memos']
+            , memos
             , updatedAt: new Date(obj['updatedAt'])
             , createdAt: new Date(obj['createdAt'])
         } as LabelData;

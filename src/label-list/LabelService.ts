@@ -59,9 +59,9 @@ export default class LableService {
         });
     }
 
-    async addMemosOnTheLabel(labelId:String, memoIds:String[]) {
+    async addMemosOnTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
         const url = this.url + '/' + labelId + '/memos';
-        fetch(url, 
+        return fetch(url, 
             {
                 body: JSON.stringify({'memoIds':memoIds}), 
                 method:'POST', 
@@ -74,9 +74,9 @@ export default class LableService {
         });
     }
 
-    async removeMemosFromTheLabel(labelId:String, memoIds:String[]) {
+    async removeMemosFromTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
         const url = this.url + '/' + labelId + '/memos';
-        fetch(url, 
+        return fetch(url, 
             {
                 body: JSON.stringify({'memoIds':memoIds}), 
                 method:'DELETE', 

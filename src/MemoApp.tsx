@@ -11,7 +11,6 @@ import MemoList from './memo-list/MemoList';
 import MemoDetail from './memo-detail/MemoDetail';
 import MemoPanel from './memo-list/MemoPanel';
 
-
 interface State {
 	selectedLabel: LabelData;
 	labelList: LabelData[];
@@ -24,6 +23,7 @@ export default class MemoApp extends React.Component<{}, State> {
 	private labelService = new LabelService();
 	private memoService = new MemoService();
 	private checkedMemoIds: string[] = [];
+	private allMemoList: MemoData[] = [];
 
 	constructor(props: any) {
 		super(props)
@@ -43,12 +43,22 @@ export default class MemoApp extends React.Component<{}, State> {
 
 		this.memoService.getMemos().then(
 			(memoList: MemoData[]) => {
+				this.allMemoList = memoList
 				this.setState({...this.state, memoList});
 			});
 	}
 	
 	selectLabelHandler = (selectedLabel: LabelData) => {
-		this.setState({...this.state, selectedLabel});
+		let memoList: MemoData[];
+		if (selectedLabel.id === DEFAULT_LABEL.id) {
+			memoList = this.allMemoList;
+		}
+		else if (selectedLabel.memos) {
+			memoList = selectedLabel.memos;
+		} else {
+			memoList = [];
+		}
+		this.setState({...this.state, selectedLabel, memoList});
 	}
 
 	addLabelHandler = (label: LabelData) => {
@@ -124,12 +134,36 @@ export default class MemoApp extends React.Component<{}, State> {
 		}
 	}
 
-	addMemoOnTheLabel() {
-		this.labelService.addMemosOnTheLabel(this.state.selectedLabel.id, this.checkedMemoIds)
-		.then();
+	tagLabelHandler = (labelId: string) => {
+		let memoIds: string[];
+		if (this.checkedMemoIds.length > 0) {
+			memoIds = this.checkedMemoIds;
+		} else if (this.state.selectedMemoData) {
+			memoIds = [this.state.selectedMemoData.id];
+		} else {
+			console.warn('There is not selected Memos');
+			return;
+		}
+
+		this.labelService.addMemosOnTheLabel(labelId, memoIds)
+		.then( (labelData: LabelData) => {
+			let labelList = this.state.labelList;
+			for (let i=0; i < labelList.length; i++) {
+				if (labelList[i].id === labelData.id) {
+					labelList[i] = labelData;
+				}
+			}
+			let memoList: MemoData[];
+			if (labelData.memos) {
+				memoList = labelData.memos;
+			} else {
+				memoList = [];
+			}
+			this.setState({...this.state, selectedLabel: labelData, labelList, memoList})
+		});
 	}
 
-	removeMemosFromTheLabel() {
+	unTagLabelHandler() {
 
 	}
 
@@ -146,9 +180,12 @@ export default class MemoApp extends React.Component<{}, State> {
 					</Col>
 					<Col md={4}> 
 						<MemoPanel selectedLabel={this.state.selectedLabel}
+								   labelList={this.state.labelList}
 								   updateLabelHandler={this.updateLabelHandler}
 								   newMemoHandler={this.newMemoHandler}
-								   deleteLabelHandler={this.deleteLabelHandler}/>
+								   deleteLabelHandler={this.deleteLabelHandler}
+								   tagLabelHandler={this.tagLabelHandler}
+								   unTagLabelHandler={this.unTagLabelHandler}/>
 						<br/>
 						<MemoList memoList={this.state.memoList}
 								  selectMemoHandler={this.selectMemoHandler}
