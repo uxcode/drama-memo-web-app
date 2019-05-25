@@ -2,8 +2,8 @@ import React from 'react';
 import { Container, Row, Col} from 'reactstrap';
 import {LabelData, MemoData, DEFAULT_LABEL} from './share/Models';
 
-import LabelService from './label-list/LabelService';
-import LabelList from './label-list/LabelList';
+import LabelService from './label/LabelService';
+import LabelList from './label/LabelListComponent';
 import MemoListContainer from './memo/MemoComponent';
 
 interface State {

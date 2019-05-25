@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Row, Col, DropdownItem, Dropdown, DropdownMenu, DropdownToggle} from 'reactstrap';
 
 import { LabelData, DEFAULT_LABEL } from '../../share/Models';
-import LabelService from '../../label-list/LabelService';
+import LabelService from '../../label/LabelService';
 
 interface Props {
     selectedLabel: LabelData;
