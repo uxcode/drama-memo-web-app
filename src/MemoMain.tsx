@@ -18,8 +18,6 @@ interface Props {
 }
 
 export default class MemoApp extends React.Component<Props, State> {
-	private labelService = new LabelService();
-
 	constructor(props: Props) {
 		super(props)
 		this.state = {selectedLabel:DEFAULT_LABEL
@@ -28,7 +26,7 @@ export default class MemoApp extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.labelService.getLables().then(
+		LabelService.getLables().then(
 			(labelList: LabelData[]) => {
 				let selectedLabel = this.getSelectLabelFromRoute(labelList);
 				this.setState({...this.state, labelList, selectedLabel});
@@ -79,7 +77,7 @@ export default class MemoApp extends React.Component<Props, State> {
 	}
 
 	deleteLabelHandler = (label: LabelData) => {
-		this.labelService.deleteLabel(label.id)
+		LabelService.deleteLabel(label.id)
 		.then( (deletedLabel: LabelData) => {
 			let labelList = this.state.labelList;
 			for (let i=0; i < labelList.length; i++) {
@@ -98,7 +96,7 @@ export default class MemoApp extends React.Component<Props, State> {
 			return;
 		}
 
-		this.labelService.addMemosOnTheLabel(labelId, checkedMemoIds)
+		LabelService.addMemosOnTheLabel(labelId, checkedMemoIds)
 		.then( (labelData: LabelData) => {
 			let labelList = this.state.labelList;
 			for (let i=0; i < labelList.length; i++) {
@@ -117,7 +115,7 @@ export default class MemoApp extends React.Component<Props, State> {
 			return;
 		}
 
-		this.labelService.removeMemosFromTheLabel(labelId, checkedMemoIds)
+		LabelService.removeMemosFromTheLabel(labelId, checkedMemoIds)
 		.then((labelData: LabelData) => {
 			let labelList = this.state.labelList;
 			for (let i=0; i < labelList.length; i++) {

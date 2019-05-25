@@ -28,7 +28,6 @@ interface State {
 }
 
 export default class MemoContainer extends React.Component<Props, State> {
-    private memoService = new MemoService();
     private allMemoList: MemoData[] = [];
 
     constructor(props: Props) {
@@ -43,7 +42,7 @@ export default class MemoContainer extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-		this.memoService.getMemos().then(
+		MemoService.getMemos().then(
 			(memoList: MemoData[]) => {
 				this.allMemoList = memoList
 				this.setState({...this.state, memoList});
@@ -114,7 +113,7 @@ export default class MemoContainer extends React.Component<Props, State> {
 	}
 
 	deleteMemoHandler = (memoData: MemoData) => {
-		this.memoService.deleteMemo(memoData)
+		MemoService.deleteMemo(memoData)
 		.then((deletedMemo:MemoData)=>{
 			let memoList = this.state.memoList;
 			for (let i=0; i < memoList.length; i++) {

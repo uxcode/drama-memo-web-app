@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Button, ListGroup, ListGroupItem, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import LableService from './LabelService';
+import LabelService from './LabelService';
 import { LabelData, DEFAULT_LABEL } from '../share/Models';
 
 interface State {
@@ -18,8 +18,6 @@ interface Props {
 }
 
 export default class LableList extends React.Component<Props, State> {
-    private readonly service = new LableService();;
-
     constructor(props: any) {
         super(props)
         this.state = {creatingLabel:''};
@@ -31,7 +29,7 @@ export default class LableList extends React.Component<Props, State> {
     createLabel = () => {
         if ( !this.state.creatingLabel || this.state.creatingLabel === '') return;
 
-        this.service.createLable(this.state.creatingLabel)
+        LabelService.createLable(this.state.creatingLabel)
         .then((label: LabelData) => {
             this.props.addLabelHandler.call(null, label);
         });

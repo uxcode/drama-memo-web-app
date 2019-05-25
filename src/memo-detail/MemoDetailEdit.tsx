@@ -14,8 +14,6 @@ interface State {
 }
 
 export default class MemoDetailEdit extends React.Component <Props, State> {
-    private readonly service = new MemoService();
-
     constructor(props: Props) {
         super(props);
 
@@ -32,12 +30,12 @@ export default class MemoDetailEdit extends React.Component <Props, State> {
 
     summit = (e: any) => {
         if (this.props.selectedMemoData) {
-            this.service.updateMemo(this.props.selectedMemoData.id, this.state.form)
+            MemoService.updateMemo(this.props.selectedMemoData.id, this.state.form)
             .then( (memo: MemoData) => {
                 this.props.updateMemoHandler(memo);
             });
         } else {
-            this.service.createMemo(this.state.form).then( (memo: MemoData) => {
+            MemoService.createMemo(this.state.form).then( (memo: MemoData) => {
                 this.props.createMemoHandler(memo);
             });
         }

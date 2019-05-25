@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Row, Col, DropdownItem, Dropdown, DropdownMenu, DropdownToggle} from 'reactstrap';
 
 import { LabelData, DEFAULT_LABEL } from '../share/Models';
-import LableService from '../label-list/LabelService';
+import LabelService from '../label-list/LabelService';
 
 interface Props {
     selectedLabel: LabelData;
@@ -20,7 +20,6 @@ interface State {
 }
 
 export default class MemoPanel extends React.Component<Props, State> {
-    private readonly labelService = new LableService();
     private inputLable: any;
 
     constructor(props: Props) {
@@ -54,7 +53,7 @@ export default class MemoPanel extends React.Component<Props, State> {
     }
     
     updateLabelTitle = () => {
-        this.labelService.renameLabel(
+        LabelService.renameLabel(
             this.props.selectedLabel.id,
             this.state.updatingLableTitle
         ).then(labelData => {

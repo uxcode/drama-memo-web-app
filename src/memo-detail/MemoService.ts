@@ -2,9 +2,9 @@ import Configuration from '../share/Congifuration'
 import {MemoDataRequest, MemoData, Mapper} from '../share/Models'
 
 export default class MemoService {
-    private readonly url = Configuration.getApiHost() + '/memos';
+    private static readonly url = Configuration.getApiHost() + '/memos';
 
-    async getMemos(): Promise<Array<MemoData>> {
+    static async getMemos(): Promise<Array<MemoData>> {
         return fetch(this.url)
         .then(response => response.json())
         .then(json => {
@@ -16,7 +16,7 @@ export default class MemoService {
         })
     }
 
-    async createMemo(request: MemoDataRequest): Promise<MemoData> {
+    static async createMemo(request: MemoDataRequest): Promise<MemoData> {
         return fetch(this.url, 
             {
                 body: JSON.stringify(request), 
@@ -29,7 +29,7 @@ export default class MemoService {
         });
     }
 
-    async updateMemo(id: string, request: MemoDataRequest): Promise<MemoData> {
+    static async updateMemo(id: string, request: MemoDataRequest): Promise<MemoData> {
         let url: string = this.url + '/' + id;
         return fetch(url, 
             {
@@ -43,7 +43,7 @@ export default class MemoService {
         });
     }
 
-    async deleteMemo(memo: MemoData): Promise<MemoData> {
+    static async deleteMemo(memo: MemoData): Promise<MemoData> {
         let url: string = this.url + '/' + memo.id;
         return fetch(url, 
             {

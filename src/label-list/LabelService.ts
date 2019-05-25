@@ -1,10 +1,10 @@
 import Configuration from '../share/Congifuration'
 import {LabelData, Mapper} from '../share/Models'
 
-export default class LableService {
-    private readonly url = Configuration.getApiHost() + '/labels';
+export default class LabelService {
+    private static  readonly url = Configuration.getApiHost() + '/labels';
 
-    async getLables(): Promise<Array<LabelData>> {
+    static async getLables(): Promise<Array<LabelData>> {
         return fetch(this.url)
         .then(response => response.json())
         .then(json => {
@@ -16,7 +16,7 @@ export default class LableService {
         })
     }
 
-    async createLable(title: string): Promise<LabelData> {
+    static async createLable(title: string): Promise<LabelData> {
         return fetch(this.url, 
             {
                 body: JSON.stringify({'title':title}), 
@@ -30,7 +30,7 @@ export default class LableService {
         });
     }
 
-    async renameLabel(id: string, title: string): Promise<LabelData> {
+    static async renameLabel(id: string, title: string): Promise<LabelData> {
         const url = this.url + '/' + id;
         return fetch(url, 
             {
@@ -45,7 +45,7 @@ export default class LableService {
         });
     }
 
-    async deleteLabel(id: string): Promise<LabelData> {
+    static async deleteLabel(id: string): Promise<LabelData> {
         const url = this.url + '/' + id;
         return fetch(url, 
             {
@@ -59,7 +59,7 @@ export default class LableService {
         });
     }
 
-    async addMemosOnTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
+    static async addMemosOnTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
         const url = this.url + '/' + labelId + '/memos';
         return fetch(url, 
             {
@@ -74,7 +74,7 @@ export default class LableService {
         });
     }
 
-    async removeMemosFromTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
+    static async removeMemosFromTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
         const url = this.url + '/' + labelId + '/memos';
         return fetch(url, 
             {
