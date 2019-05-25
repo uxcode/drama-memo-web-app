@@ -8,7 +8,7 @@ interface Props {
     selectedLabel: LabelData;
     labelList: LabelData[];
     updateLabelHandler: Function;
-    newMemoHandler: Function;
+    newMemoModeHandler: Function;
     tagLabelHandler: Function;
     unTagLabelHandler: Function;
 }
@@ -62,8 +62,8 @@ export default class MemoPanel extends React.Component<Props, State> {
         });
     }
 
-    newMemo = () => {
-        this.props.newMemoHandler(this.props.selectedLabel);
+    newMemo = (e: any) => {
+        this.props.newMemoModeHandler(this.props.selectedLabel);
     }
 
     tagLabel = (e: any) => {

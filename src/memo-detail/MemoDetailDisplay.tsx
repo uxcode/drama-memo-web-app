@@ -6,7 +6,7 @@ import { MemoData } from '../share/Models';
 
 interface Props {
     selectedMemoData: MemoData | undefined;
-    editMemoHandler: Function;
+    editModeMemoHandler: Function;
     deleteMemoHandler: Function;
 }
 
@@ -17,11 +17,11 @@ export default class MemoDetailDisplay extends React.Component<Props, {}> {
     }
 
     editMemo = () => {
-        this.props.editMemoHandler.call(null, this.props.selectedMemoData)
+        this.props.editModeMemoHandler(this.props.selectedMemoData);
     }
 
     deleteMemo = () => {
-        this.props.deleteMemoHandler.call(null, this.props.selectedMemoData)
+        this.props.deleteMemoHandler(this.props.selectedMemoData);
     }
 
     render () {

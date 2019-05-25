@@ -105,11 +105,11 @@ export default class MemoContainer extends React.Component<Props, State> {
             this.setState({...this.state, selectedMemoData, isMemoEdit: false});
     }
     
-    newMemoHandler = (labelData: LabelData) => {
+    newMemoModeHandler = (labelData: LabelData) => {
 		this.setState({...this.state, selectedMemoData: undefined, isMemoEdit: true})
 	}
 
-	editMemoHandler = (memoData: MemoData) => {
+	editMemoModeHandler = (memoData: MemoData) => {
 		this.setState({...this.setState, isMemoEdit:true});
 	}
 
@@ -146,12 +146,11 @@ export default class MemoContainer extends React.Component<Props, State> {
 
 		let memoList;
 		if (this.props.selectedLabel.id === DEFAULT_LABEL.id) {
-			memoList = this.allMemoList;
+            memoList = this.allMemoList;
+            this.setState({...this.state, memoList, selectedMemoData: memoData, isMemoEdit: false});
 		} else {
-			memoList = this.state.memoList;
-		}
-
-		this.setState({...this.state, memoList, selectedMemoData: memoData, isMemoEdit: false});
+            this.props.tagLabelHandler(this.props.selectedLabel.id, [memoData.id]);
+        }
 	}
 
 	updateMemoHandler = (memoData: MemoData) => {
@@ -181,7 +180,7 @@ export default class MemoContainer extends React.Component<Props, State> {
                     <MemoPanel selectedLabel={this.props.selectedLabel}
                         labelList={this.props.labelList}
                         updateLabelHandler={this.props.updateLabelHandler}
-                        newMemoHandler={this.newMemoHandler}
+                        newMemoModeHandler={this.newMemoModeHandler}
                         tagLabelHandler={this.props.tagLabelHandler}
                         unTagLabelHandler={this.props.unTagLabelHandler}/>
                     <br/>
@@ -205,8 +204,8 @@ export default class MemoContainer extends React.Component<Props, State> {
             return (
                 <MemoDetail selectedMemoData={this.state.selectedMemoData}
                     isEdit={this.state.isMemoEdit}
-                    editMemoHandler={this.editMemoHandler}
-                    deleteMemoHandler={this.editMemoHandler}
+                    editModeMemoHandler={this.editMemoModeHandler}
+                    deleteMemoHandler={this.deleteMemoHandler}
                     createMemoHandler={this.createMemoHandler}
                     updateMemoHandler={this.updateMemoHandler}/>
             );

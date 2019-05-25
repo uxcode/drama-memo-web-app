@@ -7,7 +7,7 @@ import {MemoData} from '../share/Models';
 interface Props {
     selectedMemoData: MemoData | undefined;
     isEdit: boolean;
-    editMemoHandler: Function;
+    editModeMemoHandler: Function;
     deleteMemoHandler: Function;
     createMemoHandler: Function;
     updateMemoHandler: Function;
@@ -22,7 +22,7 @@ export default class MemoDetail extends React.Component<Props, {}> {
                         updateMemoHandler={this.props.updateMemoHandler}/>
         } else {
             return <MemoDetailDisplay 
-                        editMemoHandler={this.props.editMemoHandler}
+                        editModeMemoHandler={this.props.editModeMemoHandler}
                         deleteMemoHandler={this.props.deleteMemoHandler}
                         selectedMemoData={this.props.selectedMemoData}/>
         }
