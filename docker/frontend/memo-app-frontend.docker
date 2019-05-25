@@ -1,0 +1,8 @@
+FROM node:10.15.3-slim
+
+WORKDIR /usr/src/
+COPY ./configure.json ./app/configure.json
+RUN npm install -g serve
+
+EXPOSE 8000
+CMD ["serve", "-l", "tcp://0.0.0.0:8000", "-s", "app"]

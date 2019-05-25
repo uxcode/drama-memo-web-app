@@ -1,4 +1,4 @@
 {
     "api-host": "memo-app-api",
-    "api-port": "8080"
+    "api-port": "3000"
 }

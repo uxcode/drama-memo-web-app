@@ -26,4 +26,19 @@ services:
             - memo-app-mongo
         ports:
             - 8080:3000
+
+    memo-app-frontend:
+        container_name: memo-app-frontend
+        build: 
+            context: ./docker/frontend
+            dockerfile: memo-app-frontend.docker
+        image: memo-app-frontend
+        volumes:
+            - ./build/:/usr/src/app/
+        depends_on:
+            - memo-app-api
+        links:
+            - memo-app-api
+        ports:
+            - 8000:8000
             
