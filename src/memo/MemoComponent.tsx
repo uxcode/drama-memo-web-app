@@ -3,6 +3,7 @@ import { Row, Col} from 'reactstrap';
 
 import { MemoData, LabelData, DEFAULT_LABEL } from '../share/Models';
 import MemoService from './MemoService';
+import LabelService from '../label/LabelService';
 import MemoList from './list/MemoList';
 import MemoDetail from './detail/MemoDetail';
 import MemoPanel from './list/MemoPanel';
@@ -12,8 +13,6 @@ interface Props {
     labelList: any;
 
     updateLabelHandler: Function;
-    tagLabelHandler: Function;
-    unTagLabelHandler: Function;
 
     match?: any;
     history?: History;
@@ -148,7 +147,7 @@ export default class MemoContainer extends React.Component<Props, State> {
             memoList = this.allMemoList;
             this.setState({...this.state, memoList, selectedMemoData: memoData, isMemoEdit: false});
 		} else {
-            this.props.tagLabelHandler(this.props.selectedLabel.id, [memoData.id]);
+            this.tagLabelHandler(this.props.selectedLabel.id, [memoData.id]);
         }
 	}
 
@@ -170,6 +169,36 @@ export default class MemoContainer extends React.Component<Props, State> {
 				memoList[i] = memoData;
 			}
 		}
+    }
+    
+    tagLabelHandler = (labelId: string, checkedMemoIds: string[]) => {
+		if (checkedMemoIds && checkedMemoIds.length === 0 && this.state.selectedMemoData) {
+			checkedMemoIds = [this.state.selectedMemoData.id];
+		} else {
+            console.warn('There is not selected Memos');
+			return;
+        }
+
+		LabelService.addMemosOnTheLabel(labelId, checkedMemoIds)
+		.then( (labelData: LabelData) => {
+            this.setState({...this.state, checkedMemoIds:[]});
+            this.props.updateLabelHandler(labelData);
+		});
+	}
+
+	unTagLabelHandler = (labelId: string, checkedMemoIds: string[]) => {
+		if (checkedMemoIds && checkedMemoIds.length === 0 && this.state.selectedMemoData) {
+			checkedMemoIds = [this.state.selectedMemoData.id];
+		} else {
+            console.warn('There is not selected Memos');
+			return;
+        }
+
+		LabelService.removeMemosFromTheLabel(labelId, checkedMemoIds)
+		.then((labelData: LabelData) => {
+            this.setState({...this.state, checkedMemoIds:[]});
+            this.props.updateLabelHandler(labelData);
+		});
 	}
 
     render() {
@@ -180,8 +209,9 @@ export default class MemoContainer extends React.Component<Props, State> {
                         labelList={this.props.labelList}
                         updateLabelHandler={this.props.updateLabelHandler}
                         newMemoModeHandler={this.newMemoModeHandler}
-                        tagLabelHandler={this.props.tagLabelHandler}
-                        unTagLabelHandler={this.props.unTagLabelHandler}/>
+                        tagLabelHandler={this.tagLabelHandler}
+                        unTagLabelHandler={this.unTagLabelHandler}
+                        checkedMemoIds={this.state.checkedMemoIds}/>
                     <br/>
                     <MemoList memoList={this.state.memoList}
                         selectedMemoData={this.state.selectedMemoData}

@@ -2,10 +2,13 @@ import Configuration from '../share/Congifuration'
 import {LabelData, Mapper} from '../share/Models'
 
 export default class LabelService {
-    private static  readonly url = Configuration.getApiHost() + '/labels';
+    private static getBaseURL() {
+        return Configuration.getApiHost() + '/labels';
+    }
 
     static async getLables(): Promise<Array<LabelData>> {
-        return fetch(this.url)
+        const url = LabelService.getBaseURL();
+        return fetch(url)
         .then(response => response.json())
         .then(json => {
             let labels = [];
@@ -17,7 +20,8 @@ export default class LabelService {
     }
 
     static async createLable(title: string): Promise<LabelData> {
-        return fetch(this.url, 
+        const url = LabelService.getBaseURL();
+        return fetch(url, 
             {
                 body: JSON.stringify({'title':title}), 
                 method:'POST', 
@@ -31,7 +35,7 @@ export default class LabelService {
     }
 
     static async renameLabel(id: string, title: string): Promise<LabelData> {
-        const url = this.url + '/' + id;
+        const url = LabelService.getBaseURL() + '/' + id;
         return fetch(url, 
             {
                 body: JSON.stringify({'title': title}), 
@@ -46,7 +50,7 @@ export default class LabelService {
     }
 
     static async deleteLabel(id: string): Promise<LabelData> {
-        const url = this.url + '/' + id;
+        const url = LabelService.getBaseURL() + '/' + id;
         return fetch(url, 
             {
                 method:'DELETE', 
@@ -60,7 +64,7 @@ export default class LabelService {
     }
 
     static async addMemosOnTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
-        const url = this.url + '/' + labelId + '/memos';
+        const url = LabelService.getBaseURL() + '/' + labelId + '/memos';
         return fetch(url, 
             {
                 body: JSON.stringify({'memoIds':memoIds}), 
@@ -75,7 +79,7 @@ export default class LabelService {
     }
 
     static async removeMemosFromTheLabel(labelId:String, memoIds:String[]): Promise<LabelData> {
-        const url = this.url + '/' + labelId + '/memos';
+        const url = LabelService.getBaseURL() + '/' + labelId + '/memos';
         return fetch(url, 
             {
                 body: JSON.stringify({'memoIds':memoIds}), 

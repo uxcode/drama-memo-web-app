@@ -11,6 +11,7 @@ interface Props {
     newMemoModeHandler: Function;
     tagLabelHandler: Function;
     unTagLabelHandler: Function;
+    checkedMemoIds: string[];
 }
 
 interface State {
@@ -67,11 +68,11 @@ export default class MemoPanel extends React.Component<Props, State> {
 
     tagLabel = (e: any) => {
         const labelId = e.currentTarget.value;
-        this.props.tagLabelHandler.call(null, labelId);
+        this.props.tagLabelHandler(labelId, this.props.checkedMemoIds);
     }
 
     unTagLabel = (e: any) => {
-        this.props.unTagLabelHandler.call(null, this.props.selectedLabel.id);
+        this.props.unTagLabelHandler(this.props.selectedLabel.id, this.props.checkedMemoIds);
     }
     
     toggle = () => {

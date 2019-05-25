@@ -71,9 +71,7 @@ export default class MemoApp extends React.Component<Props, State> {
 				break;
 			} 
 		}
-		this.setState({...this.state, 
-						labelList, 
-						selectedLabel: labelList[i]});
+		this.setState({...this.state, labelList, selectedLabel: labelList[i]});
 	}
 
 	deleteLabelHandler = (label: LabelData) => {
@@ -87,44 +85,6 @@ export default class MemoApp extends React.Component<Props, State> {
 				}
 			}
 			this.setState({...this.state, labelList, selectedLabel: DEFAULT_LABEL});
-		});
-	}
-
-	tagLabelHandler = (labelId: string, checkedMemoIds: string[]) => {
-		if (checkedMemoIds.length === 0) {
-			console.warn('There is not selected Memos');
-			return;
-		}
-
-		LabelService.addMemosOnTheLabel(labelId, checkedMemoIds)
-		.then( (labelData: LabelData) => {
-			let labelList = this.state.labelList;
-			for (let i=0; i < labelList.length; i++) {
-				if (labelList[i].id === labelData.id) {
-					labelList[i] = labelData;
-				}
-			}
-
-			this.setState({...this.state, selectedLabel: labelData, labelList})
-		});
-	}
-
-	unTagLabelHandler = (labelId: string, checkedMemoIds: string[]) => {
-		if (checkedMemoIds.length === 0) {
-			console.warn('There is not selected Memos');
-			return;
-		}
-
-		LabelService.removeMemosFromTheLabel(labelId, checkedMemoIds)
-		.then((labelData: LabelData) => {
-			let labelList = this.state.labelList;
-			for (let i=0; i < labelList.length; i++) {
-				if (labelList[i].id === labelData.id) {
-					labelList[i] = labelData;
-				}
-			}
-
-			this.setState({...this.state, selectedLabel: labelData, labelList})
 		});
 	}
 
@@ -152,8 +112,6 @@ export default class MemoApp extends React.Component<Props, State> {
 						<MemoListContainer selectedLabel={this.state.selectedLabel}
 							labelList={this.state.labelList}
 							updateLabelHandler={this.updateLabelHandler}
-							tagLabelHandler={this.tagLabelHandler}
-							unTagLabelHandler={this.unTagLabelHandler}
 							match={this.props.match}
 							history={this.props.history}
 							location={this.props.location}
