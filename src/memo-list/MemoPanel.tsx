@@ -9,7 +9,6 @@ interface Props {
     labelList: LabelData[];
     updateLabelHandler: Function;
     newMemoHandler: Function;
-    deleteLabelHandler: Function;
     tagLabelHandler: Function;
     unTagLabelHandler: Function;
 }
@@ -68,10 +67,6 @@ export default class MemoPanel extends React.Component<Props, State> {
         this.props.newMemoHandler.call(null, this.props.selectedLabel);
     }
 
-    deleteLabel = () => {
-        this.props.deleteLabelHandler.call(null, this.props.selectedLabel);
-    }
-
     tagLabel = (e: any) => {
         const labelId = e.currentTarget.value;
         this.props.tagLabelHandler.call(null, labelId);
@@ -103,10 +98,6 @@ export default class MemoPanel extends React.Component<Props, State> {
                         </Button>
                     </Col>
                     <Col md={{size:4, offset:4}} className="text-right">
-                        <Button color="danger" onClick={this.deleteLabel}>
-                            <span className="fas fa-trash-alt"></span>
-                        </Button>
-                        &nbsp;&nbsp;
                         <Button color="primary" onClick={this.newMemo}>
                             <span className="fas fa-plus-square"></span>
                         </Button>

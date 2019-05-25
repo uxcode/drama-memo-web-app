@@ -147,13 +147,13 @@ export default class MemoApp extends React.Component<Props, State> {
 							labelList={this.state.labelList}
 							selectedLabel={this.state.selectedLabel}
 							selectLabelHandler={this.selectLabelHandler}
-							addLabelHandler={this.addLabelHandler}/> 
+							addLabelHandler={this.addLabelHandler}
+							deleteLabelHandler={this.deleteLabelHandler}/> 
 					</Col>
 					<Col md={10}>
 						<MemoListContainer selectedLabel={this.state.selectedLabel}
 							labelList={this.state.labelList}
 							updateLabelHandler={this.updateLabelHandler}
-							deleteLabelHandler={this.deleteLabelHandler}
 							tagLabelHandler={this.tagLabelHandler}
 							unTagLabelHandler={this.unTagLabelHandler}
 							match={this.props.match}

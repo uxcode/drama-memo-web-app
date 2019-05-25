@@ -14,6 +14,7 @@ interface Props {
     initSelectedLable: LabelData;
     selectLabelHandler: Function;
     addLabelHandler: Function;
+    deleteLabelHandler: Function;
 }
 
 export default class LableList extends React.Component<Props, State> {
@@ -38,6 +39,10 @@ export default class LableList extends React.Component<Props, State> {
         this.setState({...this.state, creatingLabel:''});
     }
     
+    deleteLabel = (e: any) => {
+        this.props.deleteLabelHandler(this.props.selectedLabel);
+    }
+
     selectLabelHandler = (e: any) => {
         const labelId = e.target.id;
         let selectedLabel = this.props.labelList.find(label => label.id === labelId);
@@ -76,7 +81,7 @@ export default class LableList extends React.Component<Props, State> {
                         {labelList}
                     </ListGroup>    
                 </Col></Row>
-                <br/>
+                <br/><br/>
                 <InputGroup>
                     <Input id="creatingLabel" type="text" name="lable" placeholder="Add Label" 
                         value={this.state.creatingLabel} onChange={this.changeHandler} ></Input>
@@ -84,6 +89,10 @@ export default class LableList extends React.Component<Props, State> {
                         <Button color="info" onClick={this.createLabel}>{"+"}</Button>
                     </InputGroupAddon>
                 </InputGroup>
+                <br style={{"height": "5px"}}/>
+                <Button color="danger" onClick={this.deleteLabel} 
+                        disabled={this.props.selectedLabel.id == DEFAULT_LABEL.id}
+                        className="container-fluid">Delete Label</Button>
             </div>
         );
     }

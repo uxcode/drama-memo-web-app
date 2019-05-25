@@ -12,7 +12,6 @@ interface Props {
     labelList: any;
 
     updateLabelHandler: Function;
-    deleteLabelHandler: Function;
     tagLabelHandler: Function;
     unTagLabelHandler: Function;
 
@@ -186,7 +185,6 @@ export default class MemoContainer extends React.Component<Props, State> {
                         labelList={this.props.labelList}
                         updateLabelHandler={this.props.updateLabelHandler}
                         newMemoHandler={this.newMemoHandler}
-                        deleteLabelHandler={this.props.deleteLabelHandler}
                         tagLabelHandler={this.props.tagLabelHandler}
                         unTagLabelHandler={this.props.unTagLabelHandler}/>
                     <br/>
