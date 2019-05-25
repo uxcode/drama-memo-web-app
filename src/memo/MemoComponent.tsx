@@ -161,7 +161,7 @@ export default class MemoContainer extends React.Component<Props, State> {
 				this.updateMemoDataInList(memoData, labelData.memos)
 		}
 
-		this.setState({...this.state, isMemoEdit: false});
+		this.setState({...this.state, isMemoEdit: false, selectedMemoData: memoData});
     }
     
     updateMemoDataInList(memoData: MemoData, memoList: MemoData[]) {
