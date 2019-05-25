@@ -91,7 +91,7 @@ export default class LableList extends React.Component<Props, State> {
                 </InputGroup>
                 <br style={{"height": "5px"}}/>
                 <Button color="danger" onClick={this.deleteLabel} 
-                        disabled={this.props.selectedLabel.id == DEFAULT_LABEL.id}
+                        disabled={this.props.selectedLabel.id === DEFAULT_LABEL.id}
                         className="container-fluid">Delete Label</Button>
             </div>
         );

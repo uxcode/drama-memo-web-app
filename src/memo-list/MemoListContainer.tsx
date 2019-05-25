@@ -58,13 +58,7 @@ export default class MemoContainer extends React.Component<Props, State> {
 
         if (prevProps.location !== this.props.location && this.props.location) {
             const memoId = this.getMemoIdFromRoute(this.props.location);
-            let selectedMemoData: MemoData | undefined;
-            if (memoId.length) {
-                selectedMemoData = this.state.memoList.find(item=>item.id === memoId);
-            } else {
-                selectedMemoData = undefined;
-            }
-            this.setState({...this.state, selectedMemoData});
+            this.selectMemoHandler(memoId);
         }
     }
 
@@ -101,16 +95,19 @@ export default class MemoContainer extends React.Component<Props, State> {
 		this.setState({...this.state, selectedMemoData, memoList});
 	}
     
-    selectMemoHandler = (selectedMemoId: String) => {
-		const memos: MemoData[] = this.state.memoList;
-		let selectedMemoData = memos.find(item => item.id === selectedMemoId );
-		if (selectedMemoData) this.setState({...this.state, selectedMemoData, isMemoEdit:false});
+    selectMemoHandler = (memoId: String) => {
+        let selectedMemoData: MemoData | undefined;
+            if (memoId.length) {
+                selectedMemoData = this.state.memoList.find(item=>item.id === memoId);
+            } else {
+                selectedMemoData = undefined;
+            }
+            this.setState({...this.state, selectedMemoData, isMemoEdit: false});
     }
     
     newMemoHandler = (labelData: LabelData) => {
 		this.setState({...this.state, selectedMemoData: undefined, isMemoEdit: true})
 	}
-
 
 	editMemoHandler = (memoData: MemoData) => {
 		this.setState({...this.setState, isMemoEdit:true});
@@ -190,7 +187,6 @@ export default class MemoContainer extends React.Component<Props, State> {
                     <br/>
                     <MemoList memoList={this.state.memoList}
                         selectedMemoData={this.state.selectedMemoData}
-                        selectMemoHandler={this.selectMemoHandler}
                         toggleCheckMemoHandler={this.toggleCheckMemoHandler}
                         checkedMemoIds={this.state.checkedMemoIds}
                         match={this.props.match}/> 
@@ -203,11 +199,10 @@ export default class MemoContainer extends React.Component<Props, State> {
     }
 
     renderMemoDetail() {
-        if (this.state.selectedMemoData === undefined) {
+        if (this.state.selectedMemoData === undefined && !this.state.isMemoEdit) {
             return (<h3>No memo selected</h3>);
         } else {
             return (
-                
                 <MemoDetail selectedMemoData={this.state.selectedMemoData}
                     isEdit={this.state.isMemoEdit}
                     editMemoHandler={this.editMemoHandler}

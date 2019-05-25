@@ -10,7 +10,6 @@ interface Props {
     memoList: Array<MemoData>;
     checkedMemoIds: string[];
     selectedMemoData: MemoData | undefined;
-    selectMemoHandler: Function;
     toggleCheckMemoHandler: Function
     match?:any
 }

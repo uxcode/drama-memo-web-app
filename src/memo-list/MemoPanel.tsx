@@ -63,8 +63,7 @@ export default class MemoPanel extends React.Component<Props, State> {
     }
 
     newMemo = () => {
-        console.log('clicked new btn', this.props.newMemoHandler);
-        this.props.newMemoHandler.call(null, this.props.selectedLabel);
+        this.props.newMemoHandler(this.props.selectedLabel);
     }
 
     tagLabel = (e: any) => {
