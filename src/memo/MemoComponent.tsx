@@ -147,7 +147,8 @@ export default class MemoContainer extends React.Component<Props, State> {
             memoList = this.allMemoList;
             this.setState({...this.state, memoList, selectedMemoData: memoData, isMemoEdit: false});
 		} else {
-            this.tagLabelHandler(this.props.selectedLabel.id, [memoData.id]);
+            this.setState({...this.state, selectedMemoData: memoData, isMemoEdit: false},
+                ()=>this.tagLabelHandler(this.props.selectedLabel.id, [memoData.id]));
         }
 	}
 
@@ -174,8 +175,9 @@ export default class MemoContainer extends React.Component<Props, State> {
     tagLabelHandler = (labelId: string, checkedMemoIds: string[]) => {
 		if (checkedMemoIds && checkedMemoIds.length === 0 && this.state.selectedMemoData) {
 			checkedMemoIds = [this.state.selectedMemoData.id];
-		} else {
-            console.warn('There is not selected Memos');
+        } else if (checkedMemoIds && checkedMemoIds.length === 0 
+            && checkedMemoIds.length === 0){
+            console.warn('There are no selected Memos');
 			return;
         }
 
@@ -189,8 +191,9 @@ export default class MemoContainer extends React.Component<Props, State> {
 	unTagLabelHandler = (labelId: string, checkedMemoIds: string[]) => {
 		if (checkedMemoIds && checkedMemoIds.length === 0 && this.state.selectedMemoData) {
 			checkedMemoIds = [this.state.selectedMemoData.id];
-		} else {
-            console.warn('There is not selected Memos');
+		} else if (checkedMemoIds && checkedMemoIds.length === 0 
+            && checkedMemoIds.length === 0) {
+            console.warn('There are no selected Memos');
 			return;
         }
 
