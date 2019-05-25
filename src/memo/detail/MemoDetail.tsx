@@ -2,7 +2,7 @@ import React from 'react';
 
 import MemoDetailDisplay from './MemoDetailDisplay';
 import MemoDetailEdit from './MemoDetailEdit';
-import {MemoData} from '../share/Models';
+import {MemoData} from '../../share/Models';
 
 interface Props {
     selectedMemoData: MemoData | undefined;

@@ -2,10 +2,10 @@ import React from 'react';
 import { Row, Col} from 'reactstrap';
 
 import { MemoData, LabelData, DEFAULT_LABEL } from '../share/Models';
-import MemoService from '../memo-detail/MemoService';
-import MemoList from './MemoList';
-import MemoDetail from '../memo-detail/MemoDetail';
-import MemoPanel from './MemoPanel';
+import MemoService from './MemoService';
+import MemoList from './list/MemoList';
+import MemoDetail from './detail/MemoDetail';
+import MemoPanel from './list/MemoPanel';
 
 interface Props {
     selectedLabel: any;

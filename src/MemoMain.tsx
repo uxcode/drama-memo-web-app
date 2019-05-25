@@ -4,7 +4,7 @@ import {LabelData, MemoData, DEFAULT_LABEL} from './share/Models';
 
 import LabelService from './label-list/LabelService';
 import LabelList from './label-list/LabelList';
-import MemoListContainer from './memo-list/MemoListContainer';
+import MemoListContainer from './memo/MemoComponent';
 
 interface State {
 	selectedLabel: LabelData;

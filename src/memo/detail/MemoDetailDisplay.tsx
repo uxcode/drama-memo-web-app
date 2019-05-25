@@ -2,7 +2,7 @@ import moment from 'moment';
 import React from 'react';
 import { Button, Row, Col } from 'reactstrap';
 
-import { MemoData } from '../share/Models';
+import { MemoData } from '../../share/Models';
 
 interface Props {
     selectedMemoData: MemoData | undefined;

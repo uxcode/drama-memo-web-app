@@ -3,7 +3,7 @@ import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Input, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
-import { MemoData } from '../share/Models';
+import { MemoData } from '../../share/Models';
 
 
 interface Props {
