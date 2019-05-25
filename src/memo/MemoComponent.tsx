@@ -41,11 +41,16 @@ export default class MemoContainer extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-		MemoService.getMemos().then(
+        MemoService.getMemos()
+        .then(
 			(memoList: MemoData[]) => {
 				this.allMemoList = memoList
 				this.setState({...this.state, memoList});
-			});
+            })
+        .then(() => {
+            const memoId = this.getMemoFromRoute(this.props.match);
+            this.selectMemoHandler(memoId);
+        });
 		
     }
 
@@ -54,22 +59,15 @@ export default class MemoContainer extends React.Component<Props, State> {
             this.selectLabelHandler(this.props.selectedLabel);
         }
 
-        if (prevProps.location !== this.props.location && this.props.location) {
-            const memoId = this.getMemoIdFromRoute(this.props.location);
+        if (prevProps.match !== this.props.match) {
+            const memoId = this.getMemoFromRoute(this.props.match);
             this.selectMemoHandler(memoId);
         }
     }
 
-    getMemoIdFromRoute = (location: any): string => {
-		if (location) {
-            const path: string[] = location.pathname.split('/');
-            const matchIndex = path.indexOf('memo');
-            if ( matchIndex > -1 && path.length > matchIndex ) {
-                return path[matchIndex+1];
-            }
-		}
-		return '';
-	}
+    getMemoFromRoute(match: any) {
+        return match && match.params && match.params.memoId ? this.props.match.params.memoId : '';
+    }
 
     selectLabelHandler = (selectedLabel: LabelData) => {
 		let memoList: MemoData[];
@@ -220,7 +218,7 @@ export default class MemoContainer extends React.Component<Props, State> {
                         selectedMemoData={this.state.selectedMemoData}
                         toggleCheckMemoHandler={this.toggleCheckMemoHandler}
                         checkedMemoIds={this.state.checkedMemoIds}
-                        match={this.props.match}/> 
+                        location={this.props.location}/> 
                 </Col>
                 <Col md={6}>
                     {this.renderMemoDetail()}

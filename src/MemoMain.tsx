@@ -26,6 +26,10 @@ export default class MemoApp extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
+		if (this.props.location.pathname === '/') {
+			this.props.history.push('/label/'+DEFAULT_LABEL.id);		
+		}
+
 		LabelService.getLables().then(
 			(labelList: LabelData[]) => {
 				let selectedLabel = this.getSelectLabelFromRoute(labelList);

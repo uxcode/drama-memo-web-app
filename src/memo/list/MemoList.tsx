@@ -11,7 +11,7 @@ interface Props {
     checkedMemoIds: string[];
     selectedMemoData: MemoData | undefined;
     toggleCheckMemoHandler: Function
-    match?:any
+    location:any
 }
 
 export default class MemoList extends React.Component<Props, {}> {
@@ -34,12 +34,26 @@ export default class MemoList extends React.Component<Props, {}> {
         return this.props.selectedMemoData !== undefined && memoId === this.props.selectedMemoData.id
     }
 
+    getLinkToUrl = (memoId: string) => {
+        // ${this.props.match.url}/memo/${memo.id}
+        let url = this.props.location.pathname;
+        
+        const path: string[] = url.split('/');
+        const matchIndex = path.indexOf('memo');
+        if ( matchIndex > -1) {
+            path[path.length-1] = memoId;
+            return path.join('/');
+        } else {
+            return url + "/memo/" + memoId; 
+        }
+    }
+
     render() {
         let memoList: any;
         if (this.props.memoList.length) {
             memoList = this.props.memoList.map((memo: MemoData) => {
                 return (
-                    <Link to={`${this.props.match.url}/memo/${memo.id}`} key={memo.id} >
+                    <Link to={this.getLinkToUrl(memo.id)} key={memo.id} >
                         <ListGroupItem className="container-fluid" tag="button"
                             active={this.couldActive(memo.id)}>
                             <Row>
