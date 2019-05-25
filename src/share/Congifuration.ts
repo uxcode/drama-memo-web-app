@@ -3,9 +3,20 @@ export default class Configuration {
     static apiPort = '8080'
 
     static async init(): Promise<JSON> {
-        return fetch('../configure.json')
-        .then(response => response.json())
-        .catch(error => console.debug('No config, so set config as default'))
+        return fetch('./configure.json', {
+            headers: {'Accept': 'application/json'}
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then((confingJson)=>{
+            Configuration.apiHost = confingJson['api-host'];
+            Configuration.apiPort = confingJson['api-port'];
+            return confingJson;
+        })
+        .catch(error => console.debug('Error whild load config.json',))
     }
     
     public static getApiHost() {
