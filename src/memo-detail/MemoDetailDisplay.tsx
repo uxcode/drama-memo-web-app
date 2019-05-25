@@ -5,7 +5,7 @@ import { Button, Row, Col } from 'reactstrap';
 import { MemoData } from '../share/Models';
 
 interface Props {
-    selectedMemoData: MemoData | null;
+    selectedMemoData: MemoData | undefined;
     editMemoHandler: Function;
     deleteMemoHandler: Function;
 }

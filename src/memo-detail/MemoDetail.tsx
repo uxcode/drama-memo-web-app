@@ -5,7 +5,7 @@ import MemoDetailEdit from './MemoDetailEdit';
 import {MemoData} from '../share/Models';
 
 interface Props {
-    selectedMemoData: MemoData | null;
+    selectedMemoData: MemoData | undefined;
     isEdit: boolean;
     editMemoHandler: Function;
     deleteMemoHandler: Function;
@@ -16,7 +16,8 @@ interface Props {
 export default class MemoDetail extends React.Component<Props, {}> {
     render = () => {
         if (this.props.isEdit) {
-            return <MemoDetailEdit selectedMemoData={this.props.selectedMemoData}
+            return <MemoDetailEdit 
+                        selectedMemoData={this.props.selectedMemoData}
                         createMemoHandler={this.props.createMemoHandler}
                         updateMemoHandler={this.props.updateMemoHandler}/>
         } else {

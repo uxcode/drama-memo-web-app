@@ -4,7 +4,7 @@ import { Button, Input, Form } from 'reactstrap';
 import MemoService from './MemoService';
 
 interface Props {
-    selectedMemoData: MemoData | null ;
+    selectedMemoData: MemoData | undefined ;
     createMemoHandler: Function;
     updateMemoHandler: Function;
 }
